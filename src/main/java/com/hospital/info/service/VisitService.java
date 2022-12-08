@@ -11,6 +11,9 @@ import com.hospital.info.repository.VisitRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class VisitService {
@@ -22,11 +25,11 @@ public class VisitService {
 
 //         hospital이 없을 때 등록불가
         Hospital hospital = hospitalRepository.findById(dto.getHospitalId())
-                .orElseThrow(() -> new RuntimeException(String.format("hospitalId:%s 가 없습니다.", dto.getHospitalId())));
+                .orElseThrow(() -> new RuntimeException("hospitalId가 없습니다."));
 
         // user가 없을 때 등록불가
         Users user = userRepository.findByUserName(userName)
-                .orElseThrow(() -> new RuntimeException(String.format("%s user가 없습니다.", userName)));
+                .orElseThrow(() -> new RuntimeException("user가 없습니다."));
         Visit visit = Visit.builder()
                 .hospital(hospital)
                 .user(user)
@@ -36,5 +39,18 @@ public class VisitService {
         Visit savedVisit = visitRepository.save(visit);
 
         return new VisitResponse(savedVisit.getHospital().getHospitalName(), savedVisit.getUser().getUserName(), savedVisit.getDisease(), savedVisit.getAmount());
+    }
+
+    public List<VisitResponse> getList() {
+        List<Visit> visitList = visitRepository.findAll();
+        List<VisitResponse> visitResponseList = visitList.stream().map(visit -> VisitResponse.builder()
+                        .hospitalName(visit.getHospital().getHospitalName())
+                        .userName(visit.getUser().getUserName())
+                        .disease(visit.getDisease())
+                        .amount(visit.getAmount())
+                        .build())
+                .collect(Collectors.toList());
+
+        return visitResponseList;
     }
 }

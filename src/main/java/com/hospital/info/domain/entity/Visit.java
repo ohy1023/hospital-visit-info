@@ -1,16 +1,16 @@
 package com.hospital.info.domain.entity;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Visit {
+public class Visit extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,7 +23,7 @@ public class Visit {
     @JoinColumn(name = "user_id")
     private Users user;
 
-//    @ManyToOne
+    //    @ManyToOne
 //    @JoinColumn(name = "code")
     private String disease;
 

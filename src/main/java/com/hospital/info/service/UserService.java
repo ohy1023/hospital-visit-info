@@ -54,7 +54,7 @@ public class UserService {
     }
 
     public UserDto getUserByUserName(String userName) {
-        Users users = userRepository.findByUserName(userName).orElseThrow(() -> new RuntimeException(""));
+        Users users = userRepository.findByUserName(userName).orElseThrow(() -> new RuntimeException("이름으로 찾을 수 없네요"));
         return UserDto.builder()
                 .userName(users.getUserName())
                 .grade(users.getGrade())
